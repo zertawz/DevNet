@@ -1,0 +1,5 @@
+{% for subinterface in subinterface %}
+interface {{subinterface.type}}{{ subinterface.number }}.{{ subinterface.subnumber }}
+ encapsulation dot1Q {{ subinterface.vlan_id }}
+ ip address {{ subinterface.ip }} {{ subinterface.mask }}
+{% endfor %}

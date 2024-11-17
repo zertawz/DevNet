@@ -1,0 +1,11 @@
+{
+    "vlans": [
+        {"id": 10},
+        {"id": 20}
+    ],
+    "trunk_interface": "FastEthernet1/0",
+    "access_interfaces": [
+        {"name": "FastEthernet1/1", "vlan_id": 10},
+        {"name": "FastEthernet1/2", "vlan_id": 20}
+    ]
+}

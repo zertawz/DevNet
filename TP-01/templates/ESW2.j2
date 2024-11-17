@@ -1,0 +1,16 @@
+{# Creation of VLANs #}
+{% for vlan in vlans %}
+vlan {{ vlan.id }}
+{% endfor %}
+
+{# Configuration of the trunk port to the router #}
+interface {{ trunk_interface }}
+ switchport mode trunk
+ switchport trunk allowed vlan {{ vlans | map(attribute='id') | join(',') }}
+
+{# Configuration des interfaces en mode access #}
+{% for interface in access_interfaces %}
+interface {{ interface.name }}
+ switchport mode access
+ switchport access vlan {{ interface.vlan_id }}
+{% endfor %}
