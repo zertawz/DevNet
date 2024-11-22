@@ -1,5 +1,10 @@
 import json
 from netmiko import ConnectHandler
+import os
+
+RED = "\033[91m"
+GREEN = "\033[92m"
+RESET = "\033[0m"
 
 def question_9(net_connect):
     print(net_connect)
@@ -51,9 +56,7 @@ def question_15(net_connect):
 
 def question_16(net_connect):
     output = net_connect.send_config_from_file("config/loopback_R01.conf")
-    #print(output)
-
-
+    print(output)
 
 def question_17(net_connect):
     output = net_connect.send_config_from_file("config/no_loopback_R01.conf")
@@ -67,16 +70,35 @@ def get_inventory():
 
 def question_20():
     hosts = get_inventory()
-    for host in hosts:
-        print(host)
+    for host in hosts:        
         if host["hostname"][0].lower()=="r":
-            net_connect2 = ConnectHandler(**host)
-            net_connect2.send_command(f"sh run | s interface g0/0.99")
+            #we get rid of hostname parameter in the dict (causes trouble with netmiko)
+            connection_params = {key: value for key, value in host.items() if key != 'hostname'}
+            net_connect2 = ConnectHandler(**connection_params)
+            output = net_connect2.send_command(f"show running-config interface GigabitEthernet0/0.99")
+            print(output)
             net_connect2.disconnect()
 
 
 def question_21():
-    pass
+    hosts = get_inventory()
+    for host in hosts:
+        configuration_file = f"config/vlan_{host["hostname"]}.conf"
+        #Verify if the configuration file searched exists
+        if not os.path.exists(configuration_file):
+            print(f"Fichier de configuration {configuration_file} introuvable. Passer à l'itération suivante.")
+            continue  #Jump to next iteration
+        else:
+            print(f"Fichier de configuration {configuration_file} trouvé. On pousse la configuration")
+            try:
+                connection_params = {key: value for key, value in host.items() if key != 'hostname'}
+                net_connect2 = ConnectHandler(**connection_params)
+                net_connect2.send_config_from_file(configuration_file)
+                net_connect2.disconnect()
+                print(f"{GREEN}Configuration {configuration_file} envoyé avec succès{RESET}")
+
+            except:
+                print(f"{RED}Erreur avec la configuration {configuration_file}{RESET}")
 
 if __name__ == "__main__":    
 
@@ -89,16 +111,17 @@ if __name__ == "__main__":
     }
     net_connect = ConnectHandler(**r01)
     
-    question_9(net_connect)
-    question_10(net_connect)
-    question_11(net_connect)
-    question_12(net_connect)
-    question_13(net_connect)
-    question_14(net_connect)
-    question_15(net_connect)
-    question_16(net_connect)
-    question_17(net_connect)
-    hosts = get_inventory()
-    print(hosts)
-    question_20()
-    #question_21()
+    #question_9(net_connect)
+    #question_10(net_connect)
+    #question_11(net_connect)
+    #question_12(net_connect)
+    #question_13(net_connect)
+    #question_14(net_connect)
+    #question_15(net_connect)
+    #question_16(net_connect)
+    #question_17(net_connect)
+    #hosts = get_inventory()
+    #print(hosts)
+    #question_20()
+    question_21()
+    net_connect.disconnect()
