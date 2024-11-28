@@ -41,6 +41,7 @@ multilink bundle-name authenticated
 !
 !
 !
+file prompt quiet
 username cisco privilege 15 password 0 cisco
 archive
  log config

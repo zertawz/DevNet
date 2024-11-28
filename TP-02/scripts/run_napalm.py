@@ -79,10 +79,6 @@ def question_34():
             f.write(config["running"])
             f.close()
 
-
-
-
-
 if __name__ == "__main__":
     r01 = {
         'hostname':'172.16.100.126',
