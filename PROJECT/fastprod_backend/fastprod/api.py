@@ -41,6 +41,17 @@ def devices():
         new_device = add_device(data)
         return jsonify(device=new_device)
 
+@app.route("/devices/<device_name>", methods=['GET', 'DELETE'])
+def device_by_name(device_name):
+    
+    if request.method == 'GET':
+        device = get_device_by_name(device_name)
+        return jsonify(device=device)
+    if request.method == 'DELETE':
+        device = get_device_by_name(device_name)
+        delete_device(device)
+        return jsonify(message="Device deleted")
+
 @app.errorhandler(HTTPException)
 def handle_exception(e):
     """Return JSON instead of HTML for HTTP errors."""

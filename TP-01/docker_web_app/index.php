@@ -1,6 +1,6 @@
 <?php
 function initMysqlConnection(){
-    $pdo = new PDO('mysql:host=127.0.0.1;dbname=devices', "root", "cpelyon123");
+    $pdo = new PDO('mysql:host=172.17.0.2;dbname=devices', "root", "cpelyon123");
     return $pdo;
 }
 
